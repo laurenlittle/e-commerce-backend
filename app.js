@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
+const expressValidator = require('express-validator');
 require('dotenv').config();
 
 // Import Routes
@@ -23,6 +24,7 @@ mongoose.connect(process.env.MONGO_URI, {
 app.use(morgan('dev')); // HTTP request logger middleware for node.js
 app.use(bodyParser.json()); // get the json data from request body
 app.use(cookieParser()); // save user creds in cookie
+app.use(expressValidator()); // validate user data on signup
 
 // Routes Middleware
 app.use('/api', userRoutes);
