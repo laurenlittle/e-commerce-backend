@@ -54,3 +54,15 @@ exports.signin = (req, res) => {
     return res.json({token, user: { _id, email, name, role}});
   })
 };
+
+exports.signout = (req, res) => {
+  // clear the cookie we had in the response token (line 50)
+  res.clearCookie('t')
+  res.json({message: 'Signout successful'});
+}
+
+// Restrict routes for logged in users
+exports.requireSignin = expressJWT({ // expressJWT needs cookieParser
+  secret: process.env.JWT_SECRET,
+  userProperty: 'auth'
+})
