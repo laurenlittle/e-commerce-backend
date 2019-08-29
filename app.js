@@ -8,6 +8,7 @@ require('dotenv').config();
 
 // Import Routes
 const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/user');
 
 // app
 const app = express();
@@ -28,6 +29,7 @@ app.use(expressValidator()); // validate user data on signup
 
 // Routes Middleware
 app.use('/api', authRoutes);
+app.use('/api', userRoutes);
 // Node JS has process
 const port = process.env.PORT || 8000
 
