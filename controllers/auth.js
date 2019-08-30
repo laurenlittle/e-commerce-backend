@@ -69,7 +69,7 @@ exports.requireSignin = expressJWT({ // expressJWT needs cookieParser
 
 exports.isAuth = (req, res, next) => {
   // req.profile if the user is authenticated - logged in user and autheticated user must have same ID
-  let user = req.profile && req.auth && req.profile._id == req.auth._id 
+  let user = req.profile && req.auth && req.profile._id == req.auth.id;
 
   if(!user) {
     return res.status(403).json({
