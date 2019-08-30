@@ -65,4 +65,26 @@ exports.signout = (req, res) => {
 exports.requireSignin = expressJWT({ // expressJWT needs cookieParser
   secret: process.env.JWT_SECRET,
   userProperty: 'auth'
-})
+});
+
+exports.isAuth = (req, res, next) => {
+  // req.profile if the user is authenticated - logged in user and autheticated user must have same ID
+  let user = req.profile && req.auth && req.profile._id == req.auth._id 
+
+  if(!user) {
+    return res.status(403).json({
+      error: 'Access Denied Pal.'
+    });
+  }
+  next();
+
+};
+
+exports.isAdmin = (req, res, next) => {
+  if(req.profile.role === 0) {
+    return res.status(403).json({
+      error: 'For Administrators only. Access Denied.'
+    });
+  }
+  next();
+};
