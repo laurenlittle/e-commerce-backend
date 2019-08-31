@@ -20,10 +20,26 @@ exports.create = (req, res) => {
       });
     }
 
+    // Validation - check for all fields
+     const { name, description, price, category, quantity, shipping } = fields;
+
+     if( !name || !description || !price || !category || !quantity || !shipping ) {
+       return res.status(400).json({
+         error: 'All fields are required.'
+       })
+     }
+
     const product = new Product(fields); // create new product with the field received
 
     // If there's a photo for the product, add it.
     if(files.photo) { // 'photo' name depends on how you send data from the client side (ex: could be image instead)
+
+      if(files.photo.size > 1000000) {
+        return res.status(400).json({
+          error: 'Image must be less than 1MB.'
+        });
+      }
+
        product.photo.data = fs.readFileSync(files.photo.path); // fs = file system - Node.js core module
        product.photo.contentType = files.photo.type;
     }
