@@ -251,3 +251,16 @@ exports.listRelated = (req, res) => {
 
     });
 };
+
+exports.listCategories = (req, res) => { // Get all the categories that are used in the product model (distinct to product)
+  Product.distinct('category', {}, (err, categories) => { // distinct method avail in Mongo
+
+    if (err) {
+      return res.status(400).json({
+        error: errorHandler(err)
+      });
+    }
+
+    res.json(categories);
+  });
+};
