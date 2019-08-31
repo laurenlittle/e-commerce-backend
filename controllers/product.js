@@ -62,6 +62,7 @@ exports.create = (req, res) => {
 
 };
 
+
 exports.productById = (req, res, next, id) => {
 
   Product.findById(id).exec((err, product) => {
@@ -77,12 +78,14 @@ exports.productById = (req, res, next, id) => {
   })
 }
 
+
 exports.read = (req, res) => {
 
   req.product.photo = undefined; // handled later
 
   return res.json(req.product);
 };
+
 
 exports.remove = (req, res) => {
 
@@ -98,8 +101,77 @@ exports.remove = (req, res) => {
 
      // Product deleted successfully
      res.json({
-       deletedProduct,
+      //  deletedProduct,
        message: 'Producted deleted successfully.'
      })
   })
+};
+
+
+exports.update = (req, res) => {
+
+  let form = new formidable.IncomingForm();
+
+  form.keepExtensions = true;
+
+  form.parse(req, (err, fields, files) => {
+
+    if (err) {
+      return res.status(400).json({
+        error: 'Image could not be uploaded at this time. Please try again.'
+      });
+    }
+
+    // Validation - check for all fields
+    const {
+      name,
+      description,
+      price,
+      category,
+      quantity,
+      shipping
+    } = fields;
+
+    if (!name || !description || !price || !category || !quantity || !shipping) {
+      return res.status(400).json({
+        error: 'All fields are required.'
+      })
+    }
+
+    let product = req.product;
+
+    // use extend method from lodash - takes 2 args. product and updated fields
+    product = _.extend(product, fields);
+
+    console.log(product)
+
+    // If there's a photo for the product, add it.
+    if (files.photo) {
+
+      if (files.photo.size > 1000000) {
+        return res.status(400).json({
+          error: 'Image must be less than 1MB.'
+        });
+      }
+
+      product.photo.data = fs.readFileSync(files.photo.path);
+      product.photo.contentType = files.photo.type;
+    }
+
+    product.save((err, result) => {
+      if (err) {
+        return res.status(400).json({
+          err: errorHandler(err)
+        });
+      }
+
+      // upon success - send product as json (result)
+      res.json({
+        result
+      });
+
+    });
+
+  });
+
 };
