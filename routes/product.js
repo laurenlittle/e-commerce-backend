@@ -1,11 +1,24 @@
 const express = require('express');
 const router = express.Router();
 
-const { create, read, remove, update, list, productById, listRelated, listCategories, listBySearch, getPhoto } = require('../controllers/product');
+const {
+  create,
+  read,
+  remove,
+  update,
+  list,
+  productById,
+  listRelated,
+  listCategories,
+  listBySearch,
+  getPhoto,
+  listSearchResults
+} = require('../controllers/product');
 const {requireSignin, isAuth, isAdmin } = require('../controllers/auth');
 const { userById } = require('../controllers/user');
 
 router.post('/product/create/:userId', requireSignin, isAuth, isAdmin, create);
+router.get('/products/search', listSearchResults);
 router.post('/products/by/search', listBySearch); // sending filters in request body - post method needed
 router.delete('/product/:productId/:userId', requireSignin, isAuth, isAdmin, remove);
 router.put('/product/:productId/:userId', requireSignin, isAuth, isAdmin, update);
