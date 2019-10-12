@@ -335,14 +335,14 @@ exports.getPhoto = (req, res, next) => {
 
 exports.listSearchResults = (req, res) => {
 
-  // create query object to hold seach val and category val
+  // create query object to hold search val and category val
   const query = {};
 
   // assign search val to query.name
   if(req.query.search) {
-    query.name = { $regex: req.query.search, $option: 'i'} // i for case insensitivity
+    query.name = { $regex: req.query.search, $options: 'i'} // i for case insensitivity (regex provided by Mongo)
 
-    if (req.query.category & req.query.category != 'All') {
+    if(req.query.category & req.query.category != 'All') {
       query.category = req.query.category
     }
 
@@ -354,7 +354,7 @@ exports.listSearchResults = (req, res) => {
         })
       }
 
-      res.json(products)
-    }).select('-photo')
+      res.json(products);
+    }).select('-photo');
   }
 };
