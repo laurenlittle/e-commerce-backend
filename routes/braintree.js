@@ -4,7 +4,7 @@ require('dotenv').config();
 
 const { requireSignin, isAuth } = require('../controllers/auth');
 const { userById } = require ('../controllers/user');
-const { generateToken } = require('../controllers/braintree');
+const { generateToken, processPayment } = require('../controllers/braintree');
 
 
 // available for auth users only
