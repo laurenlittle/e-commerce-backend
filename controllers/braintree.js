@@ -22,7 +22,7 @@ exports.generateToken = (req, res) => {
 
 exports.processPayment = (req, res) => {
   let clientNonce = req.body.paymentMethodNonce;
-  let clientPurchaseTotal = req.body.purchaseTotal;
+  let clientPurchaseTotal = req.body.amount;
 
   // Charge it to the game!
   let newTransaction = gateway.transaction.sale({
@@ -37,6 +37,5 @@ exports.processPayment = (req, res) => {
     } else {
       res.json(results)
     }
-
   })
 };
