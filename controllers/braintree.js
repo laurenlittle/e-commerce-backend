@@ -31,11 +31,12 @@ exports.processPayment = (req, res) => {
     options: {
       submitForSettlement: true
     }
-  }, (err, results) => {
+  },
+  (err, result) => {
     if(err) {
       res.status(500).json(error);
     } else {
-      res.json(results);
+      res.json(result);
     }
-  })
+  });
 };
