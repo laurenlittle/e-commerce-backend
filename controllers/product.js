@@ -360,3 +360,32 @@ exports.listSearchResults = (req, res) => {
     }).select('-photo');
   }
 };
+
+exports.decreaseProductQuantity = (req, res, next) => {
+  let bulkOpts = req.body.order.products.map(item => {
+    return {
+      updateOne: {
+        filter: { _id: item._id },
+        update: {
+          $inc: {
+            quantity: -item.count,
+            sold: +item.count
+          }
+        }
+      }
+    }
+  });
+            // Mongoose method
+  Product.bulkWrite(bulkOpts, {}, (err, products) => {
+      console.log(bulkOpts[0].updateOne);
+
+       if (err) {
+         return res.status(400).json({
+           error: 'Could not update product quantity.'
+         })
+       }
+      console.log('decrease QUANTITY');
+       next();
+  });
+
+};
